@@ -1,0 +1,85 @@
+@import '../variables.less';
+
+@height: @spacing * 4;
+
+.osu-input {
+  width: 200px;
+  height: @height;
+  padding: @spacing - 1px; // -1 for border-width
+  border: 1px solid @borderColor;
+  border-radius: @borderRadius;
+
+  color: @textMain;
+  font-family: @fontName;
+  font-size: @fontSize;
+  line-height: @spacing * 2;
+
+  background-color: @bgWhite;
+  box-shadow: @shadow-level-1;
+
+  transition: @defaultTransition, margin 0s, padding 0s, border-radius 0s, border-width 0s;
+
+  &:disabled {
+    border-color: @borderColorDisabled;
+    color: @textDisabled;
+    background-color: @bgDisabled;
+    box-shadow: none;
+  }
+
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=312971
+  &[readonly]:not(.osu-select) {
+    padding: @spacing;
+    border-width: 0;
+    background-color: @bgDisabled;
+    box-shadow: none;
+  }
+
+  &:not(:disabled):not([readonly]):hover {
+    box-shadow: @shadow-level-2;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: @focusColor;
+  }
+
+  .placeholder-color();
+}
+
+.osu-input-error {
+  border-color: @errorColor;
+  border-width: 2px;
+  padding: @spacing - 2px;
+
+  &:focus {
+    border-color: @errorColor;
+  }
+}
+
+.osu-input-icon {
+  @iconWidth: @spacing * 2 + 18px; // padding + font icon width
+  padding-right: @iconWidth - 1px; // 1px border width
+
+  &[readonly]:not(.osu-select) {
+    padding-right: @iconWidth;
+  }
+
+  &.osu-input-error {
+    padding-right: @iconWidth - 2px;
+  }
+
+  & + .MuiSvgIcon-root {
+    vertical-align: top;
+    height: @height;
+    box-sizing: content-box;
+    font-size: 18px;
+    padding: 0 @spacing;
+    margin-left: -@iconWidth;
+    color: #666;
+    cursor: pointer;
+  }
+
+  &:disabled + .MuiSvgIcon-root {
+    color: @textDisabled;
+  }
+}

@@ -1,0 +1,72 @@
+@import '../variables.less';
+
+.input-list-container {
+  position: relative;
+}
+
+.input-list-container-open > input {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;r
+}
+
+.input-list-delimiter {
+  position: absolute;
+  bottom: 0;
+  left: 1px;
+  right: 1px;
+  height: 2px;
+  background-color: #ccc; // fallback if the gradient or calc() don't work
+  background-image: linear-gradient(
+    to right,
+    @bgWhite @spacing,
+    #ccc @spacing calc(100% - @spacing),
+    @bgWhite calc(100% - @spacing)
+  );
+  z-index: 2; // this is to hide the list's shadow
+}
+
+.input-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 7 * (18px + @spacing) + 4px; // 7 items + list padding
+  overflow-y: auto;
+  padding-top: @spacing / 2;
+  margin-bottom: @spacing; // add a bit more scrolling to the viewport
+
+  border: 1px solid @focusColor;
+  border-top: none;
+  border-bottom-right-radius: @borderRadius;
+  border-bottom-left-radius: @borderRadius;
+
+  background-color: @bgWhite;
+  box-shadow: @shadow-level-1;
+  transition: @defaultTransition;
+  z-index: 1;
+}
+
+.input-list-item,
+.input-list-no-item {
+  color: @textMain;
+  font-family: @fontName;
+  font-size: @fontSize;
+  line-height: @spacing * 2;
+  padding: (@spacing / 2) @spacing;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input-list-item {
+  cursor: pointer;
+}
+
+.input-list-item-highlight {
+  background-color: @bgGraySecondary;
+}
+
+.input-list-no-item {
+  cursor: not-allowed;
+  font-weight: 500;
+}

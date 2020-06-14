@@ -1,0 +1,28 @@
+@import './colors.less';
+
+@fontName: Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@fontSize: 14px;
+@spacing: 8px;
+@borderRadius: 3px;
+@defaultTransitionTime: 0.1s;
+@defaultTransition: all @defaultTransitionTime;
+
+@shadow-level-1: 0 1px 3px rgba(0, 0, 0, 0.12);
+@shadow-level-2: 0 2px 4px rgba(0, 0, 0, 0.14);
+@shadow-level-3: 0 3px 6px rgba(0, 0, 0, 0.2);
+@shadow-level-4: 0 4px 7px rgba(0, 0, 0, 0.24);
+@shadow-level-5: 0 6px 10px rgba(0, 0, 0, 0.24);
+@shadow-level-6: 0 10px 14px rgba(0, 0, 0, 0.24);
+@shadow-level-7: 0 24px 24px rgba(0, 0, 0, 0.24), 0 0 24px rgba(0, 0, 0, 0.24);
+
+.user-select(@value: none) {
+  -webkit-user-select: @value;
+  user-select: @value;
+}
+
+.placeholder-color(@color: @textDisabled) {
+  &::placeholder {
+    color: @color;
+    opacity: 1; // Firefox fix
+  }
+}
