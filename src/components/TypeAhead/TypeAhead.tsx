@@ -1,9 +1,9 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Cancel, Search } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FormLabel } from '../FormLabel';
 import { InputList, Option } from '../InputList';
-import { filterStaticOptions, isOptionSelected } from './utils';
+import { isOptionSelected } from './utils';
 import { isStringEmpty, preventDefault, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
 import { InputProps } from '../Input';
@@ -23,20 +23,8 @@ interface Props<O extends Option> extends SharedInputProps {
     /** Custom text to replace "No matching results". */
     noResultsText?: string;
 }
-
-interface StaticProps<O extends Option> extends Props<O> {
-    /**
-     * Static options list, cannot be used together with `onSearch`.
-     *
-     * When used, the options list will immediately show up when focusing the input.
-     */
-    options: readonly O[];
-    /** A custom filter can be used, replacing the default filter. */
-    filter?: (option: O, normalizedText: string) => boolean;
-    onSearch?: never;
-  }
   
-  interface DynamicProps<O extends Option> extends Props<O> {
+interface DynamicProps<O extends Option> extends Props<O> {
     options?: never;
     filter?: never;
     /**
@@ -45,9 +33,9 @@ interface StaticProps<O extends Option> extends Props<O> {
      * Cannot be used together with `options` or `filter`.
      */
     onSearch: (text: string) => readonly O[] | Promise<readonly O[]>;
-  }
+}
 
-export type TypeAheadProps<O extends Option = Option> = StaticProps<O> | DynamicProps<O>;
+export type TypeAheadProps<O extends Option = Option> = DynamicProps<O>;
 
 /**
  * ## TypeAhead
@@ -56,12 +44,8 @@ export type TypeAheadProps<O extends Option = Option> = StaticProps<O> | Dynamic
  * ### Usage and examples:
  *
  * @example
- * // TypeAhead with static options:
- * <TypeAhead value={[]} options={[]} onChange={onChange} />
  * // TypeAhead with dynamic options:
  * <TypeAhead value={[]} onSearch={onSearch} onChange={onChange} />
- * // TypeAhead with static options and a custom filter:
- * <TypeAhead value={[]} options={[]} onChange={onChange} customFilter={customFilter} />
  */
 function TypeAhead<O extends Option>({
     className,
@@ -90,12 +74,14 @@ function TypeAhead<O extends Option>({
     const [hasError, showError, hideError] = useBooleanState(false);
     const [options, setOptions] = useState<readonly O[]>([]);
     const [highlightedOptionID, setHighlightedOptionID] = useState<O['id'] | null>(null);
+
+    useEffect(() => {
+        setInputValue((value.length > 0 && value[0].screen_name) ? `@${value[0].screen_name}` : '');
+    }, [value])
   
     const filteredOptions = useMemo(() => {
-      return staticOptions
-      ? filterStaticOptions<O>(staticOptions, inputValue, filter)
-      : options;
-    }, [staticOptions, inputValue, filter, options]);
+      return options;
+    }, [options]);
   
     const [pinnedOptions, unpinnedOptions, sortedOptions] = useMemo(() => {
         if (previousValue === undefined) return [[], [], []];      
@@ -264,7 +250,6 @@ function TypeAhead<O extends Option>({
           />
   
           {valueIsEmpty
-            // `onMouseDown={preventDefault}` prevents clicking on the icon from closing the list
             ? <Search onMouseDown={preventDefault} />
             : <Cancel onMouseDown={preventDefault} onClick={clear} />}
         </InputList>
