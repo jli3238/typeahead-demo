@@ -7,7 +7,7 @@ import { filterStaticOptions, isOptionSelected } from './utils';
 import { isStringEmpty, preventDefault, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
 import { InputProps } from '../Input';
-import { Omit } from '../../types';
+import { Omit } from '../../../types/General';
 
 import '../Input/Input.less';
 

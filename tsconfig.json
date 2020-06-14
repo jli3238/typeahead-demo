@@ -18,9 +18,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2020",
-    "types": ["jest"]
+    "types": ["jest", "node"]
   },
   "include": [
-    "src"
+    "src", "types/types.ts"
   ]
 }
