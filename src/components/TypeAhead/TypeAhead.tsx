@@ -25,38 +25,24 @@ interface Props<O extends Option> extends SharedTextAreaProps {
 }
   
 interface DynamicProps<O extends Option> extends Props<O> {
-    options?: never;
-    filter?: never;
-    /**
-     * Function returning a dynamic options list.
-     *
-     * Cannot be used together with `options` or `filter`.
-     */
     onSearch: (text: string) => readonly O[] | Promise<readonly O[]>;
 }
 
 export type TypeAheadProps<O extends Option = Option> = DynamicProps<O>;
 
 /**
- * ## TypeAhead
- * Use this component to display a list of matching options alongside a text input.
- *
- * ### Usage and examples:
- *
+ * ## TypeAhead: Display a list of matching options alongside a textarea input.
  * @example
- * // TypeAhead with dynamic options:
  * <TypeAhead value={[]} onSearch={onSearch} onChange={onChange} />
  */
 function TypeAhead<O extends Option>({
     className,
     value,
-    options: staticOptions,
     onChange,
     onSearch,
     onKeyDown,
     onFocus,
     onBlur,
-    filter,
     placeholder,
     noResultsText,
     label,
