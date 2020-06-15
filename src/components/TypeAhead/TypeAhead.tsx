@@ -121,30 +121,19 @@ function TypeAhead<O extends Option>({
             openList();
           } else if (highlightedOptionID !== null) {
             const option = options.find(o => o.id === highlightedOptionID);
-            if (option !== undefined) {
-              selectOption(option);
-            }
+            if (option !== undefined) { selectOption(option); }
           }
           break;
         case 'Tab':
           if (highlightedOptionID !== null) {
             const option = options.find(o => o.id === highlightedOptionID);
-            if (option !== undefined) {
-                selectOption(option);
-            }
+            if (option !== undefined) { selectOption(option); }
           }
           break;
-        case 'Escape':
-          closeList();
-          break;
-        case 'ArrowUp':
-          highlightNextOption(-1);
-          break;
-        case 'ArrowDown':
-          highlightNextOption(+1);
-          break;
-        default:
-          return;
+        case 'Escape': closeList(); break;
+        case 'ArrowUp': highlightNextOption(-1); break;
+        case 'ArrowDown': highlightNextOption(+1); break;
+        default: return;
       }
   
       event.preventDefault();
@@ -164,8 +153,7 @@ function TypeAhead<O extends Option>({
       setHighlightedOptionID(options[selectedOptionIndex + delta].id);
     }
   
-    function openList() { setOpen(); }
-  
+    function openList() { setOpen(); }  
     function closeList() { setClose(); }
   
     function selectOption(option: O) {
@@ -196,7 +184,7 @@ function TypeAhead<O extends Option>({
     }
   
     return (
-      <FormLabel label={label} disabled={props.disabled} required={props.required} error={error} className={labelContainerClass}>
+      <FormLabel role="search"  aria-label="search screen name" label={label} disabled={props.disabled} required={props.required} error={error} className={labelContainerClass}>
         <InputList
             isOpen={isOpen}
             highlightedOptionID={highlightedOptionID}

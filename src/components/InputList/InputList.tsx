@@ -6,7 +6,7 @@ import './InputList.less';
 
 function defaultItemRenderer (option: Option) {
     return (<div className="option-row">
-      <div className="option-attr"><img src={option.profile_image_url} alt="profile-avatar"/><span className="screen-name">@{option.screen_name}</span></div>
+      <div className="option-attr"><img src={option.profile_image_url} alt={option.screen_name}/><span className="screen-name">@{option.screen_name}</span></div>
       <div className="option-attr name">{option.name}</div>
       <div className="option-attr verified">{option.verified && 'VERIFIED'}</div>
     </div>);
@@ -56,13 +56,15 @@ export function InputList<O extends Option>({
         }    
     }, [highlightedOptionID]);
 
-    function mapOption(option: O) {
+    function mapOption(option: O, index: number) {
         return (
           <div
-                key={option.id}
-                className={clsx('input-list-item', { 'input-list-item-highlight': highlightedOptionID === option.id })}
-                onMouseOver={() => onItemOver(option)}
-                onClick={() => onItemClick(option)}
+            key={option.id}
+            role="option"
+            aria-selected={index === 0}
+            className={clsx('input-list-item', { 'input-list-item-highlight': highlightedOptionID === option.id })}
+            onMouseOver={() => onItemOver(option)}
+            onClick={() => onItemClick(option)}
             >
             {itemRenderer(option)}
             <hr className="input-list-divider" />
@@ -75,8 +77,10 @@ export function InputList<O extends Option>({
           {children}    
           {showList && (
             <>
-              <div />
+              <div id="input_list"/>
               <div
+                role="listbox"
+                aria-labelledby="input_list"
                 ref={listRef}
                 className="input-list"
                 // This prevents the list from stealing focus from the input
