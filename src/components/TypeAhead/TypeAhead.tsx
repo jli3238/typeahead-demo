@@ -6,14 +6,14 @@ import { InputList, Option } from '../InputList';
 import { isOptionSelected } from './utils';
 import { isStringEmpty, preventDefault, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
-import { InputProps } from '../Input';
+import { TextAreaProps } from '../TextArea';
 import { Omit } from '../../../types/General';
 
-import '../Input/Input.less';
+import '../TextArea/TextArea.less';
 
-type SharedInputProps = Omit<InputProps, 'value' | 'defaultValue' | 'type' | 'icon' | 'onChange'>;
+type SharedTextAreaProps = Omit<TextAreaProps, 'value' | 'defaultValue' | 'onChange'>;
 
-interface Props<O extends Option> extends SharedInputProps {
+interface Props<O extends Option> extends SharedTextAreaProps {
     /** Array of selected options. */
     value: readonly O[];
     /** The onChange listener gets called when the selection list gets updated. */
@@ -100,7 +100,7 @@ function TypeAhead<O extends Option>({
         return [pinnedOptions, unpinnedOptions, sortedOptions];
     }, [filteredOptions, previousValue]);
   
-    async function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
       const text = event.target.value;
       openList();
       setInputValue(text);
@@ -135,7 +135,7 @@ function TypeAhead<O extends Option>({
       setIsNotLoading();
     }
   
-    function onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    function onInputKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
       switch (event.key) {
         case 'Enter':
           if (!isOpen) {
@@ -238,7 +238,7 @@ function TypeAhead<O extends Option>({
           onItemClick={toggleOption}
           onItemOver={option => setHighlightedOptionID(option.id)}
         >
-          <input
+          <textarea
             className={className}
             value={inputValue}
             onChange={onInputChange}
