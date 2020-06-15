@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Cancel, Search } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FormLabel } from '../FormLabel';
@@ -54,43 +54,26 @@ function TypeAhead<O extends Option>({
     const promiseRef = useRef<null | readonly O[] | Promise<readonly O[]>>(null);
     const [inputValue, setInputValue] = useState('');
     const [isOpen, setOpen, setClose] = useBooleanState(false);
-    // Keep the previous value in state while the list is open to prevent reordering the items while toggling options:
-    const [previousValue, setPreviousValue] = useState<undefined | readonly O[]>(undefined);
     const [isLoading, setIsLoading, setIsNotLoading] = useBooleanState(false);
     const [hasError, showError, hideError] = useBooleanState(false);
     const [options, setOptions] = useState<readonly O[]>([]);
     const [highlightedOptionID, setHighlightedOptionID] = useState<O['id'] | null>(null);
+    const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
+    const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
 
     useEffect(() => {
-        setInputValue((value.length > 0 && value[0].screen_name) ? `${[...inputValue.split(' ').slice(0, inputValue.split(' ').length - 1), '@'+value[0].screen_name+' '].join(' ')}` : inputValue);
+        setInputValue((value.length > 0 && value[0].screen_name) ? `${textAreaTextBeforeMention} @${value[0].screen_name} ${textAreaTextAfterMention}` : inputValue);
         closeList();
     }, [value])
-  
-    const filteredOptions = useMemo(() => {
-      return options;
-    }, [options]);
-  
-    const [pinnedOptions, unpinnedOptions, sortedOptions] = useMemo(() => {
-        if (previousValue === undefined) return [[], [], []];      
-        const pinnedOptions = [];
-        const unpinnedOptions = [];
-        let sortedOptions = [];
-
-        for (const option of filteredOptions) {
-            if (isOptionSelected(option.id, previousValue)) {
-                pinnedOptions.push(option);
-            } else {
-                unpinnedOptions.push(option);
-            }
-        }
-        sortedOptions = [...pinnedOptions, ...unpinnedOptions];
-        return [pinnedOptions, unpinnedOptions, sortedOptions];
-    }, [filteredOptions, previousValue]);
   
     async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
       const textAreaText = event.target.value;
       setInputValue(textAreaText);
-      const textWithMention = textAreaText.substring(0, event.target.selectionStart).split(' ')[textAreaText.substring(0, event.target.selectionStart).split(' ').length - 1];
+      const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
+      const strArrAfterMention = textAreaText.substring(event.target.selectionStart + 1).split(' ');
+      setTextAreaTextBeforeMention(strArrBeforeMention.slice(0, strArrBeforeMention.length - 1).join(' '));
+      setTextAreaTextAfterMention(strArrAfterMention.join(' '));
+      const textWithMention = strArrBeforeMention[strArrBeforeMention.length - 1];
       if (!(textWithMention.charAt(0) === '@' && textWithMention.length > 1)) { closeList(); return; }
       const text = textWithMention.slice(1);
       openList();
@@ -131,7 +114,7 @@ function TypeAhead<O extends Option>({
           if (!isOpen) {
             openList();
           } else if (highlightedOptionID !== null) {
-            const option = sortedOptions.find(o => o.id === highlightedOptionID);
+            const option = options.find(o => o.id === highlightedOptionID);
             if (option !== undefined) {
               selectOption(option);
             }
@@ -157,24 +140,22 @@ function TypeAhead<O extends Option>({
       if (!isOpen) return;
   
       if (highlightedOptionID === null) {
-        setHighlightedOptionID(sortedOptions[0].id);
+        setHighlightedOptionID(options[0].id);
         return;
       }
   
-      const selectedOptionIndex = sortedOptions.findIndex(option => option.id === highlightedOptionID);
-      if (delta === +1 && selectedOptionIndex === sortedOptions.length - 1) return;
+      const selectedOptionIndex = options.findIndex(option => option.id === highlightedOptionID);
+      if (delta === +1 && selectedOptionIndex === options.length - 1) return;
       if (delta === -1 && selectedOptionIndex === 0) return;
-      setHighlightedOptionID(sortedOptions[selectedOptionIndex + delta].id);
+      setHighlightedOptionID(options[selectedOptionIndex + delta].id);
     }
   
     function openList() {
       setOpen();
-      setPreviousValue(prevValue => prevValue ?? value);
     }
   
     function closeList() {
       setClose();
-      setPreviousValue(undefined);
     }
   
     function clear() {
@@ -206,7 +187,7 @@ function TypeAhead<O extends Option>({
     );
   
     let noOptionsText;
-    if (!valueIsEmpty && sortedOptions.length === 0) {
+    if (!valueIsEmpty && options.length === 0) {
       if (isLoading) {
         noOptionsText = 'Loading...';
       } else if (hasError) {
@@ -221,8 +202,7 @@ function TypeAhead<O extends Option>({
         <InputList
           isOpen={isOpen}
           highlightedOptionID={highlightedOptionID}
-          options={unpinnedOptions}
-          pinnedOptions={pinnedOptions}
+          options={options}
           noOptionsText={noOptionsText}
           itemRenderer={itemRenderer}
           onItemClick={selectOption}
