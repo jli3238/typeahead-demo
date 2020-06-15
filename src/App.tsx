@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Option } from './components/InputList';
+import { Option, UserResponse } from './components/InputList';
 import { TypeAhead } from '../src/components/TypeAhead';
 import { api } from './utils/api';
 
@@ -10,7 +10,7 @@ function App() {
   const placeholder = `What's happening?`;
 
   async function onSearchAsync(text: string) {
-    let users = await api.get<Option[]>(usersApiUrl);
+    let users = await api.get<UserResponse>(usersApiUrl).then(result => result ? result.users : result);
     users = users ? users.slice(0, 50) : [];
     const filteredOptions = users.filter(user => user.screen_name?.substring(0, text.length) === text);
     return filteredOptions;

@@ -19,7 +19,7 @@ const getJson = <T>(response: Response): Promise<T> => {
     if (response.status === 204) {
       return response.text() as unknown as Promise<T>;
     }
-    return response.json().then(data => data.users);
+    return response.json();
   }
 
   return getError(response);

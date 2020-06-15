@@ -36,18 +36,18 @@ export type TypeAheadProps<O extends Option = Option> = DynamicProps<O>;
  */
 function TypeAhead<O extends Option>({
     className,
-    value,
-    onChange,
-    onSearch,
-    onKeyDown,
-    onFocus,
-    onBlur,
-    placeholder,
-    noResultsText,
-    label,
     error,
+    label,
     labelContainerClass,
+    noResultsText,
+    placeholder,
+    value,
     itemRenderer,
+    onBlur,
+    onChange,
+    onFocus,
+    onKeyDown,
+    onSearch,
     ...props
   }: TypeAheadProps<O>) {
     const promiseRef = useRef<null | readonly O[] | Promise<readonly O[]>>(null);
@@ -94,6 +94,7 @@ function TypeAhead<O extends Option>({
       // It is possible for a user to input `a`, then `ab`, then `a` again,
       // in which case we will ignore the first request for `a`, as it might resolve
       // to an outdated list of options depending on contextual values.
+
       const promise = onSearch(text);
       promiseRef.current = promise;
   

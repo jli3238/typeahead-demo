@@ -4,4 +4,9 @@ export interface Option<ID = string | number> {
     screen_name?: string;
     name: string;
     verified?: boolean;
-}
+};
+
+export interface UserResponse {
+    users: Option[];
+    metadata: any;
+};
