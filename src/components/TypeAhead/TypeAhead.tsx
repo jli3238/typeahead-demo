@@ -60,7 +60,7 @@ function TypeAhead<O extends Option>({
     const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
     const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
 
-    const maxOfChars = 50;
+    const maxOfChars = 500;
 
     useEffect(() => {
         const newInputValue = (value.length > 0 && value[0].screen_name) 
