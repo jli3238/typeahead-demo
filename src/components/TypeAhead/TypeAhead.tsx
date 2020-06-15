@@ -51,14 +51,14 @@ function TypeAhead<O extends Option>({
     ...props
   }: TypeAheadProps<O>) {
     const promiseRef = useRef<null | readonly O[] | Promise<readonly O[]>>(null);
-    const [inputValue, setInputValue] = useState('');
-    const [isOpen, setOpen, setClose] = useBooleanState(false);
-    const [isLoading, setIsLoading, setIsNotLoading] = useBooleanState(false);
     const [hasError, showError, hideError] = useBooleanState(false);
-    const [options, setOptions] = useState<readonly O[]>([]);
     const [highlightedOptionID, setHighlightedOptionID] = useState<O['id'] | null>(null);
-    const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
+    const [inputValue, setInputValue] = useState('');
+    const [isLoading, setIsLoading, setIsNotLoading] = useBooleanState(false);
+    const [isOpen, setOpen, setClose] = useBooleanState(false);
+    const [options, setOptions] = useState<readonly O[]>([]);
     const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
+    const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
 
     const maxOfChars = 500;
 
@@ -126,6 +126,14 @@ function TypeAhead<O extends Option>({
             }
           }
           break;
+        case 'Tab':
+          if (highlightedOptionID !== null) {
+            const option = options.find(o => o.id === highlightedOptionID);
+            if (option !== undefined) {
+                selectOption(option);
+            }
+          }
+          break;
         case 'Escape':
           closeList();
           break;
@@ -156,13 +164,9 @@ function TypeAhead<O extends Option>({
       setHighlightedOptionID(options[selectedOptionIndex + delta].id);
     }
   
-    function openList() {
-      setOpen();
-    }
+    function openList() { setOpen(); }
   
-    function closeList() {
-      setClose();
-    }
+    function closeList() { setClose(); }
   
     function selectOption(option: O) {
       if (isOptionSelected(option.id, value)) {
