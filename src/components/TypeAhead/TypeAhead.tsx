@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Cancel, Search } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FormLabel } from '../FormLabel';
 import { InputList, Option } from '../InputList';
 import { isOptionSelected } from './utils';
-import { isStringEmpty, preventDefault, wrapEvent } from '../../utils';
+import { isStringEmpty, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
 import { TextAreaProps } from '../TextArea';
 import { Omit } from '../../../types/General';
@@ -61,20 +60,25 @@ function TypeAhead<O extends Option>({
     const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
     const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
 
+    const limitOfCharacters = 50;
+
     useEffect(() => {
-        setInputValue((value.length > 0 && value[0].screen_name) ? `${textAreaTextBeforeMention} @${value[0].screen_name} ${textAreaTextAfterMention}` : inputValue);
+        const newInputValue = (value.length > 0 && value[0].screen_name) ? `${textAreaTextBeforeMention} @${value[0].screen_name} ${textAreaTextAfterMention}`: inputValue;
+        if (newInputValue.length > limitOfCharacters) return;
+        setInputValue(newInputValue);
         closeList();
     }, [value])
   
-    async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {    
       const textAreaText = event.target.value;
+      if (textAreaText.length > limitOfCharacters) return;
       setInputValue(textAreaText);
       const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
       const strArrAfterMention = textAreaText.substring(event.target.selectionStart + 1).split(' ');
       setTextAreaTextBeforeMention(strArrBeforeMention.slice(0, strArrBeforeMention.length - 1).join(' '));
       setTextAreaTextAfterMention(strArrAfterMention.join(' '));
       const textWithMention = strArrBeforeMention[strArrBeforeMention.length - 1];
-      if (!(textWithMention.charAt(0) === '@' && textWithMention.length > 1)) { closeList(); return; }
+      if (!(textWithMention.charAt(0) === '@' && textWithMention.length > 2)) { closeList(); return; }
       const text = textWithMention.slice(1);
       openList();
       hideError();
@@ -158,14 +162,6 @@ function TypeAhead<O extends Option>({
       setClose();
     }
   
-    function clear() {
-      promiseRef.current = null;
-      setInputValue('');
-      setIsNotLoading();
-      hideError();
-      setOptions([]);
-    }
-  
     function selectOption(option: O) {
       if (isOptionSelected(option.id, value)) {
         onChange(value.filter(v => v.id !== option.id));
@@ -200,15 +196,15 @@ function TypeAhead<O extends Option>({
     return (
       <FormLabel label={label} disabled={props.disabled} required={props.required} error={error} className={labelContainerClass}>
         <InputList
-          isOpen={isOpen}
-          highlightedOptionID={highlightedOptionID}
-          options={options}
-          noOptionsText={noOptionsText}
-          itemRenderer={itemRenderer}
-          onItemClick={selectOption}
-          onItemOver={option => setHighlightedOptionID(option.id)}
+            isOpen={isOpen}
+            highlightedOptionID={highlightedOptionID}
+            options={options}
+            noOptionsText={noOptionsText}
+            itemRenderer={itemRenderer}
+            onItemClick={selectOption}
+            onItemOver={option => setHighlightedOptionID(option.id)}
         >
-          <textarea
+            <textarea
             className={className}
             value={inputValue}
             onChange={onInputChange}
@@ -217,11 +213,8 @@ function TypeAhead<O extends Option>({
             onBlur={wrapEvent(closeList, onBlur)}
             placeholder={placeholder}
             {...props}
-          />
-  
-          {valueIsEmpty
-            ? <Search onMouseDown={preventDefault} />
-            : <Cancel onMouseDown={preventDefault} onClick={clear} />}
+            />
+            <div className="characters-remaining-propmt">{limitOfCharacters - inputValue.length} characters remaining...</div>
         </InputList>
       </FormLabel>
     );

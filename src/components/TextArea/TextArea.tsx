@@ -9,8 +9,8 @@ export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea({ className, label, error, labelContainerClass, ...props }, ref) {
   className = clsx(
-    'osu-textarea',
-    { 'osu-textarea-error': error !== undefined && error !== false },
+    'textarea',
+    { 'textarea-error': error !== undefined && error !== false },
     className
   );
 

@@ -5,7 +5,11 @@ import { preventDefault } from '../../utils';
 import './InputList.less';
 
 function defaultItemRenderer (option: Option) {
-    return option.name;
+    return (<div className="option-row">
+      <div className="option-attr"><img src={option.profile_image_url} alt="profile-avatar"/><span className="screen-name">@{option.screen_name}</span></div>
+      <div className="option-attr name">{option.name}</div>
+      <div className="option-attr verified">{option.verified && 'VERIFIED'}</div>
+    </div>);
 }
 
 export interface InputListProps<O extends Option> {
@@ -13,7 +17,6 @@ export interface InputListProps<O extends Option> {
     isOpen: boolean;
     highlightedOptionID: O['id'] | null;
     options: readonly O[];
-    pinnedOptions?: readonly O[];
     noOptionsText?: React.ReactChild;
     itemRenderer?: (option: O) => React.ReactChild;
     onItemClick: (option: O) => void;
@@ -25,7 +28,6 @@ export function InputList<O extends Option>({
     isOpen,
     highlightedOptionID,
     options,
-    pinnedOptions,
     noOptionsText,
     itemRenderer = defaultItemRenderer,
     onItemClick,

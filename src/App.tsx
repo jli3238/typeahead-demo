@@ -12,7 +12,7 @@ function App() {
   async function onSearchAsync(text: string) {
     let users = await api.get<Option[]>(usersApiUrl);
     users = users ? users.slice(0, 50) : [];
-    const filteredOptions = users.filter(user => user.name.includes(text));
+    const filteredOptions = users.filter(user => user.screen_name?.substring(0, text.length) === text);
     return filteredOptions;
   }
 
