@@ -58,14 +58,15 @@ export function InputList<O extends Option>({
 
     function mapOption(option: O) {
         return (
-            <div
+          <div
                 key={option.id}
                 className={clsx('input-list-item', { 'input-list-item-highlight': highlightedOptionID === option.id })}
                 onMouseOver={() => onItemOver(option)}
                 onClick={() => onItemClick(option)}
             >
             {itemRenderer(option)}
-          </div>    
+            <hr className="input-list-divider" />
+          </div>
         );
     }
 
@@ -74,7 +75,7 @@ export function InputList<O extends Option>({
           {children}    
           {showList && (
             <>
-              <div className="input-list-delimiter" />
+              <div />
               <div
                 ref={listRef}
                 className="input-list"

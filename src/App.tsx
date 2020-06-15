@@ -7,7 +7,7 @@ function App() {
   
   const usersApiUrl = 'http://localhost:4000/twitter/user/search?username=chicago';
   const [value, setValue] = useState<readonly Option[]>([]);
-  const placeholder = 'Start twitter here...';
+  const placeholder = `What's happening?`;
 
   async function onSearchAsync(text: string) {
     let users = await api.get<Option[]>(usersApiUrl);

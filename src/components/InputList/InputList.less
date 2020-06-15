@@ -2,56 +2,64 @@
 
 .input-list-container {
   position: relative;
-  textarea.typeahead {
-    width: 600px;
-    height: 371px;
-    resize: none;
-    border-color: gray;
-    border-width: 1px;
-    border-bottom: dashed 1px;
-  }
-  footer {
-    color: lightgray;
-    margin: 0px;
+  width: 700px;
+  margin-left: 50px;
+  div.twitter-container {
+    box-shadow: @shadow-level-7;
+    border-radius: @borderRadius-level-1;
+    background-color: @bgWhite;
+  
+    textarea.typeahead {
+      resize: none;
+      border: none;
+      background-color: @bgWhite;
+      margin: 25px;
+      padding: 8px;
+      width: 90%;
+      height: 271px;
+      color: @primaryBlue;
+      font-family: @fontName;
+      font-size: @fontSize-level-1;
+    }
+
+    textarea:focus {
+      outline: none;
+    }
+
+    hr.textarea-divider {
+      margin: 25px;
+    }
+
+    footer {
+      font-family: @fontName;
+      font-size: @fontSize-level-3;
+      margin-right: 25px;
+      margin-bottom: 25px;
+      padding-bottom: 25px;
+      text-align: right;
+    }
+    .chars-left {
+      color: @primaryBlue;
+    }      
+    .chars-no-left {
+      color: @red;
+    }
   }
 }
 
 .input-list-container-open > input {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.input-list-delimiter {
-  position: absolute;
-  bottom: 0;
-  left: 1px;
-  right: 1px;
-  height: 2px;
-  background-color: #ccc; // fallback if the gradient or calc() don't work
-  background-image: linear-gradient(
-    to right,
-    @bgWhite @spacing,
-    #ccc @spacing calc(100% - @spacing),
-    @bgWhite calc(100% - @spacing)
-  );
-  z-index: 2; // this is to hide the list's shadow
+  border-radius: @borderRadius-level-1;
 }
 
 .input-list {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  margin-left: 50px;
+  width: 600px;
   max-height: 7 * (18px + @spacing) + 4px; // 7 items + list padding
   overflow-y: auto;
   padding-top: @spacing / 2;
   margin-bottom: @spacing; // add a bit more scrolling to the viewport
-
-  border: 1px solid @focusColor;
-  border-top: none;
-  border-bottom-right-radius: @borderRadius;
-  border-bottom-left-radius: @borderRadius;
-
   background-color: @bgWhite;
   box-shadow: @shadow-level-1;
   transition: @defaultTransition;
@@ -62,7 +70,7 @@
 .input-list-no-item {
   color: @textMain;
   font-family: @fontName;
-  font-size: @fontSize;
+  font-size: @fontSize-level-2;
   line-height: @spacing * 2;
   padding: (@spacing / 2) @spacing;
   white-space: nowrap;

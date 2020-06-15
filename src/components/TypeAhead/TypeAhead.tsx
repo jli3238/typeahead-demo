@@ -60,7 +60,7 @@ function TypeAhead<O extends Option>({
     const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
     const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
 
-    const maxOfChars = 500;
+    const maxOfChars = 50;
 
     useEffect(() => {
         const newInputValue = (value.length > 0 && value[0].screen_name) 
@@ -73,7 +73,6 @@ function TypeAhead<O extends Option>({
   
     async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {    
       const textAreaText = event.target.value;
-      if (textAreaText.length > maxOfChars) return;
       setInputValue(textAreaText);
       const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
       const strArrAfterMention = textAreaText.substring(event.target.selectionStart + 1).split(' ');
@@ -175,12 +174,8 @@ function TypeAhead<O extends Option>({
     const valueIsEmpty = isStringEmpty(inputValue);
 
     className = clsx(
-      'typeahead',
-      'input',
-      'input-icon',
-      {
-        'input-error': error !== undefined && error !== false
-      },
+      'chars-left',
+      { 'chars-no-left': inputValue.length > maxOfChars },
       className
     );
   
@@ -206,17 +201,20 @@ function TypeAhead<O extends Option>({
             onItemClick={selectOption}
             onItemOver={option => setHighlightedOptionID(option.id)}
         >
-            <textarea
-            className={className}
-            value={inputValue}
-            onChange={onInputChange}
-            onKeyDown={wrapEvent(onInputKeyDown, onKeyDown)}
-            onFocus={wrapEvent(openList, onFocus)}
-            onBlur={wrapEvent(closeList, onBlur)}
-            placeholder={placeholder}
-            {...props}
-            />
-            <footer className="chars-left">{maxOfChars - inputValue.length} characters left...</footer>            
+            <div className="twitter-container">
+                <textarea
+                    className="typeahead"
+                    value={inputValue}
+                    onChange={onInputChange}
+                    onKeyDown={wrapEvent(onInputKeyDown, onKeyDown)}
+                    onFocus={wrapEvent(closeList, onFocus)}
+                    onBlur={wrapEvent(closeList, onBlur)}
+                    placeholder={placeholder}
+                    {...props}
+                />
+                <hr className="textarea-divider" />
+                <footer className={className}>{maxOfChars - inputValue.length} characters left...</footer>            
+            </div>
         </InputList>
       </FormLabel>
     );
