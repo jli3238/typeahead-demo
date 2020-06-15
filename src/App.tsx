@@ -13,10 +13,6 @@ function App() {
     let users = await api.get<Option[]>(usersApiUrl);
     users = users ? users.slice(0, 50) : [];
     const filteredOptions = users.filter(user => user.name.includes(text));
-    const newOption = { id: `new-${text}`, name: `Custom: "${text}"` };
-    if (!filteredOptions.some(o => o.id === newOption.id)) {
-      filteredOptions.push(newOption);
-    }
     return filteredOptions;
   }
 

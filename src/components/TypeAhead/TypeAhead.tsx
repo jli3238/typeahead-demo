@@ -62,7 +62,8 @@ function TypeAhead<O extends Option>({
     const [highlightedOptionID, setHighlightedOptionID] = useState<O['id'] | null>(null);
 
     useEffect(() => {
-        setInputValue((value.length > 0 && value[0].screen_name) ? `@${value[0].screen_name}` : '');
+        setInputValue((value.length > 0 && value[0].screen_name) ? `${[...inputValue.split(' ').slice(0, inputValue.split(' ').length - 1), '@'+value[0].screen_name+' '].join(' ')}` : inputValue);
+        closeList();
     }, [value])
   
     const filteredOptions = useMemo(() => {
@@ -87,9 +88,12 @@ function TypeAhead<O extends Option>({
     }, [filteredOptions, previousValue]);
   
     async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-      const text = event.target.value;
+      const textAreaText = event.target.value;
+      setInputValue(textAreaText);
+      const textWithMention = textAreaText.substring(0, event.target.selectionStart).split(' ')[textAreaText.substring(0, event.target.selectionStart).split(' ').length - 1];
+      if (!(textWithMention.charAt(0) === '@' && textWithMention.length > 1)) { closeList(); return; }
+      const text = textWithMention.slice(1);
       openList();
-      setInputValue(text);
       hideError();
       setOptions([]);
   
@@ -99,7 +103,7 @@ function TypeAhead<O extends Option>({
   
       // Keep track of the last request.
       // This is so we make sure we only accept the list of options from the _last_ request:
-      // It is possible for the user to input `a`, then `ab`, then `a` again,
+      // It is possible for a user to input `a`, then `ab`, then `a` again,
       // in which case we will ignore the first request for `a`, as it might resolve
       // to an outdated list of options depending on contextual values.
       const promise = onSearch(text);
@@ -107,7 +111,7 @@ function TypeAhead<O extends Option>({
   
       try {
         const options = await promise;
-        // It is possible for users to type faster than promises can get resolved,
+        // It is possible for a user to type faster than promises can get resolved,
         // so we need to make sure we set the correct matching suggestions.
         // e.g. don't show suggestions for `Pari` when the input has `Paris`.
         if (promiseRef.current !== promise) return;
@@ -129,7 +133,7 @@ function TypeAhead<O extends Option>({
           } else if (highlightedOptionID !== null) {
             const option = sortedOptions.find(o => o.id === highlightedOptionID);
             if (option !== undefined) {
-              toggleOption(option);
+              selectOption(option);
             }
           }
           break;
@@ -181,7 +185,7 @@ function TypeAhead<O extends Option>({
       setOptions([]);
     }
   
-    function toggleOption(option: O) {
+    function selectOption(option: O) {
       if (isOptionSelected(option.id, value)) {
         onChange(value.filter(v => v.id !== option.id));
       } else {
@@ -221,7 +225,7 @@ function TypeAhead<O extends Option>({
           pinnedOptions={pinnedOptions}
           noOptionsText={noOptionsText}
           itemRenderer={itemRenderer}
-          onItemClick={toggleOption}
+          onItemClick={selectOption}
           onItemOver={option => setHighlightedOptionID(option.id)}
         >
           <textarea
