@@ -60,18 +60,20 @@ function TypeAhead<O extends Option>({
     const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
     const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
 
-    const limitOfCharacters = 50;
+    const maxOfChars = 500;
 
     useEffect(() => {
-        const newInputValue = (value.length > 0 && value[0].screen_name) ? `${textAreaTextBeforeMention} @${value[0].screen_name} ${textAreaTextAfterMention}`: inputValue;
-        if (newInputValue.length > limitOfCharacters) return;
+        const newInputValue = (value.length > 0 && value[0].screen_name) 
+            ? `${textAreaTextBeforeMention} @${value[0].screen_name} ${textAreaTextAfterMention}`
+            : inputValue;
+        if (newInputValue.length > maxOfChars) return;
         setInputValue(newInputValue);
         closeList();
     }, [value])
   
     async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {    
       const textAreaText = event.target.value;
-      if (textAreaText.length > limitOfCharacters) return;
+      if (textAreaText.length > maxOfChars) return;
       setInputValue(textAreaText);
       const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
       const strArrAfterMention = textAreaText.substring(event.target.selectionStart + 1).split(' ');
@@ -214,7 +216,7 @@ function TypeAhead<O extends Option>({
             placeholder={placeholder}
             {...props}
             />
-            <div className="characters-remaining-propmt">{limitOfCharacters - inputValue.length} characters remaining...</div>
+            <footer className="chars-left">{maxOfChars - inputValue.length} characters left...</footer>            
         </InputList>
       </FormLabel>
     );
