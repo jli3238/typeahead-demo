@@ -218,7 +218,7 @@ function TypeAhead<O extends Option>({
                     {...props}
                 />
                 <hr className="textarea-divider" />
-                <footer className={className}>{maxOfChars - inputValue.length} characters left...</footer>            
+                <footer className={className}><span className="chars-left-icon">{maxOfChars - inputValue.length}</span></footer>            
             </div>
         </InputList>
       </FormLabel>

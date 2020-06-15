@@ -27,7 +27,7 @@
     }
 
     hr.textarea-divider {
-      margin: 25px;
+      margin: 25px 25px 5px 25px;
     }
 
     footer {
@@ -35,14 +35,20 @@
       font-size: @fontSize-level-3;
       margin-right: 25px;
       margin-bottom: 25px;
-      padding-bottom: 25px;
-      text-align: right;
+      padding-bottom: 35px;
     }
     .chars-left {
       color: @primaryBlue;
     }      
     .chars-no-left {
       color: @red;
+    }
+    span.chars-left-icon {
+      display: block;
+      float: right;
+      padding: 5px;
+      border: @primaryBlue solid 2px;
+      border-radius: @borderRadius-level-1;
     }
   }
 }
