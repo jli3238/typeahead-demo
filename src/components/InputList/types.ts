@@ -1,12 +1,12 @@
 export interface Option<ID = string | number> {
-    id: ID;
-    profile_image_url?: string;
-    screen_name?: string;
-    name: string;
-    verified?: boolean;
+  id: ID;
+  profile_image_url?: string;
+  screen_name?: string;
+  name: string;
+  verified?: boolean;
 };
 
 export interface UserResponse {
-    users: Option[];
-    metadata: any;
+  users: Option[];
+  metadata: any;
 };
