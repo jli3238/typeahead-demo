@@ -74,15 +74,13 @@ function TypeAhead<O extends Option>({
     setInputValue(textAreaText);
     const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
     const textWithMention = strArrBeforeMention[strArrBeforeMention.length - 1];
-    if (!(textWithMention.charAt(0) === '@' && textWithMention.length > 2)) { closeList(); return; }
+    if (textWithMention.length < 3 || textWithMention.charAt(0) !== '@' || (textWithMention.match(/\@/g) || []).length > 1 ) { closeList(); return; }
     setText(textWithMention.slice(1));
     setMentionReplaceStartIndex(event.target.selectionStart - text.length);
     openList();
     hideError();
     setOptions([]);
-
     if (onSearch === undefined || isStringEmpty(text)) return;
-
     setIsLoading();
 
     // Keep track of the last request.
@@ -90,10 +88,8 @@ function TypeAhead<O extends Option>({
     // It is possible for a user to input `a`, then `ab`, then `a` again,
     // in which case we will ignore the first request for `a`, as it might resolve
     // to an outdated list of options depending on contextual values.
-
     const promise = onSearch(text);
     promiseRef.current = promise;
-
     try {
       const options = await promise;
       // It is possible for a user to type faster than promises can get resolved,
@@ -105,7 +101,6 @@ function TypeAhead<O extends Option>({
       if (promiseRef.current !== promise) return;
       showError();
     }
-
     promiseRef.current = null;
     setIsNotLoading();
   }
@@ -113,7 +108,7 @@ function TypeAhead<O extends Option>({
   function onInputKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     switch (event.key) {
       case 'Enter':
-        if (!isOpen) {
+        if (!isOpen) { 
           openList();
         } else if (highlightedOptionID !== null) {
           const option = options.find(o => o.id === highlightedOptionID);
@@ -131,18 +126,15 @@ function TypeAhead<O extends Option>({
       case 'ArrowDown': highlightNextOption(+1); break;
       default: return;
     }
-
     event.preventDefault();
   }
 
   function highlightNextOption(delta: 1 | -1) {
     if (!isOpen) return;
-
     if (highlightedOptionID === null) {
       setHighlightedOptionID(options[0].id);
       return;
     }
-
     const selectedOptionIndex = options.findIndex(option => option.id === highlightedOptionID);
     if (delta === +1 && selectedOptionIndex === options.length - 1) return;
     if (delta === -1 && selectedOptionIndex === 0) return;
@@ -151,7 +143,6 @@ function TypeAhead<O extends Option>({
 
   function openList() { setOpen(); }
   function closeList() { setClose(); }
-
   function selectOption(option: O) {
     if (isOptionSelected(option.id, value)) {
       onChange(value.filter(v => v.id !== option.id));
@@ -161,7 +152,6 @@ function TypeAhead<O extends Option>({
   }
 
   const valueIsEmpty = isStringEmpty(inputValue);
-
   className = clsx(
     'chars-left',
     { 'chars-no-left': inputValue.length > maxOfChars },
@@ -202,7 +192,7 @@ function TypeAhead<O extends Option>({
             {...props}
           />
           <hr className="textarea-divider" />
-          <footer className={className}><span className="chars-left-icon">{maxOfChars - inputValue.length}</span></footer>
+          <footer className={className}><span className="chars-left-icon">{maxOfChars-inputValue.length}</span></footer>
         </div>
       </InputList>
     </FormLabel>

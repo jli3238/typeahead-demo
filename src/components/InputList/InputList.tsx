@@ -5,11 +5,13 @@ import { preventDefault } from '../../utils';
 import './InputList.less';
 
 function defaultItemRenderer(option: Option) {
-  return (<div className="option-row">
-    <div className="option-attr"><img src={option.profile_image_url} alt={option.screen_name} /><span className="screen-name">@{option.screen_name}</span></div>
-    <div className="option-attr name">{option.name}</div>
-    <div className="option-attr verified">{option.verified && 'VERIFIED'}</div>
-  </div>);
+  return (
+    <div className="option-row">
+      <div className="option-attr"><img src={option.profile_image_url} alt={option.screen_name} /><span className="screen-name">@{option.screen_name}</span></div>
+      <div className="option-attr name">{option.name}</div>
+      <div className="option-attr verified">{option.verified && 'VERIFIED'}</div>
+    </div>
+  );
 }
 
 export interface InputListProps<O extends Option> {
@@ -25,19 +27,17 @@ export interface InputListProps<O extends Option> {
 
 export function InputList<O extends Option>({
   children,
-  isOpen,
   highlightedOptionID,
-  options,
+  isOpen,
   noOptionsText,
+  options,
   itemRenderer = defaultItemRenderer,
   onItemClick,
   onItemOver
 }: InputListProps<O>) {
   const listRef = useRef<HTMLDivElement>(null);
   const showList = isOpen && (options.length > 0 || noOptionsText !== undefined);
-  const className = clsx('input-list-container', {
-    'input-list-container-open': showList
-  });
+  const className = clsx('input-list-container', { 'input-list-container-open': showList });
 
   useLayoutEffect(() => {
     if (highlightedOptionID === null) return;
@@ -45,10 +45,8 @@ export function InputList<O extends Option>({
     if (list === null) return;
     const div = list.querySelector('input-list-item-highlight');
     if (div === null) return;
-
     const { top, bottom } = list.getBoundingClientRect();
     const { top: divTop, bottom: divBottom } = div.getBoundingClientRect();
-
     if (top > divTop) {
       list.scrollTop += divTop - top;
     } else if (bottom < divBottom) {
@@ -75,7 +73,7 @@ export function InputList<O extends Option>({
   return (
     <div className={className}>
       {children}
-      {showList && (
+      {showList &&
         <>
           <div id="input_list" />
           <div
@@ -88,13 +86,11 @@ export function InputList<O extends Option>({
             // This prevents checkbox labels from stealing focus from the input
             onClick={preventDefault}
           >
-            {noOptionsText !== undefined && (
-              <div className="input-list-no-item">{noOptionsText}</div>
-            )}
+            {noOptionsText !== undefined && <div className="input-list-no-item">{noOptionsText}</div>}
             {options.map(mapOption)}
           </div>
         </>
-      )}
+      }
     </div>
   );
 }

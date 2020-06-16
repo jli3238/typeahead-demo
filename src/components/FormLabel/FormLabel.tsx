@@ -21,12 +21,8 @@ export function FormLabel({ className, label, disabled, required, error, childre
     <label className={className} {...props}>
       {label && <span className="form-label">{label}</span>}
       {children}
-      {typeof error === 'string' && (
-        <span className="form-label-error">{error}</span>
-      )}
-      {Array.isArray(error) && (
-        <span className="form-label-error">{error.map(err => <div key={err}>{err}</div>)}</span>
-      )}
+      {typeof error === 'string' && <span className="form-label-error">{error}</span>}
+      {Array.isArray(error) && <span className="form-label-error">{error.map(err => <div key={err}>{err}</div>)}</span>}
     </label>
   );
 }
