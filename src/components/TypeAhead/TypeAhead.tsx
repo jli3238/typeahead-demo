@@ -54,15 +54,15 @@ function TypeAhead<O extends Option>({
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading, setIsNotLoading] = useBooleanState(false);
   const [isOpen, setOpen, setClose] = useBooleanState(false);
+  const [mentionReplaceStartIndex, setMentionReplaceStartIndex] = useState(0);
   const [options, setOptions] = useState<readonly O[]>([]);
-  const [textAreaTextAfterMention, setTextAreaTextAfterMention] = useState('');
-  const [textAreaTextBeforeMention, setTextAreaTextBeforeMention] = useState('');
+  const [text, setText] = useState('');
   const promiseRef = useRef<null | readonly O[] | Promise<readonly O[]>>(null);
   const maxOfChars = 500;
 
   useEffect(() => {
     const newInputValue = (value.length > 0 && value[0].screen_name)
-      ? `${textAreaTextBeforeMention} @${value[0].screen_name} ${textAreaTextAfterMention}`
+      ? `${inputValue.slice(0,mentionReplaceStartIndex)}${value[0].screen_name} ${inputValue.slice(mentionReplaceStartIndex + text.length)}`
       : inputValue;
     if (newInputValue.length > maxOfChars) return;
     setInputValue(newInputValue);
@@ -73,12 +73,10 @@ function TypeAhead<O extends Option>({
     const textAreaText = event.target.value;
     setInputValue(textAreaText);
     const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
-    const strArrAfterMention = textAreaText.substring(event.target.selectionStart + 1).split(' ');
-    setTextAreaTextBeforeMention(strArrBeforeMention.slice(0, strArrBeforeMention.length - 1).join(' '));
-    setTextAreaTextAfterMention(strArrAfterMention.join(' '));
     const textWithMention = strArrBeforeMention[strArrBeforeMention.length - 1];
     if (!(textWithMention.charAt(0) === '@' && textWithMention.length > 2)) { closeList(); return; }
-    const text = textWithMention.slice(1);
+    setText(textWithMention.slice(1));
+    setMentionReplaceStartIndex(event.target.selectionStart - text.length);
     openList();
     hideError();
     setOptions([]);
