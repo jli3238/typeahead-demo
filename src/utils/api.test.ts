@@ -1,3 +1,4 @@
+// Additional Feature 6. Add unit tests
 import fetchMock from 'fetch-mock';
 import { api, storageKey } from './api';
 

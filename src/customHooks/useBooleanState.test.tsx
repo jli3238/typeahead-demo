@@ -1,3 +1,4 @@
+// Additional Feature 6. Add unit tests
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { useBooleanState } from './useBooleanState';

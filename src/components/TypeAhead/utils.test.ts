@@ -1,3 +1,4 @@
+// Additional Feature 6. Add unit tests
 import { isOptionSelected } from './utils';
 
 const options = [

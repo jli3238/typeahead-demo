@@ -73,7 +73,13 @@ function TypeAhead<O extends Option>({
     setInputValue(textAreaText);
     const strArrBeforeMention = textAreaText.substring(0, event.target.selectionStart).split(' ');
     const textWithMention = strArrBeforeMention[strArrBeforeMention.length - 1];
-    if (textWithMention.length < 3 || textWithMention.charAt(0) !== '@' || (textWithMention.match(/\@/g) || []).length > 1 ) { closeList(); return; }
+    // The suggestion panel shows up when the following criteria are all met:
+    // 1. The string between the cursor and the last whitespace before the cursor starts with "@";
+    // 2. Length of the string between the cursor and the last whitespace before the cursor is 3 or more;
+    // 3. The string between the cusor and the last whitespace before the cursor doesn't contain more than 1 "@"; for instance:
+    //    inserting '@ch' by typing '@ch' in between the existing mention "@chicagobulls" as "@chicagobu'@ch'lls" won't display 
+    //    suggestions to avoid messing up with the existing mention
+    if (textWithMention.charAt(0) !== '@' || textWithMention.length < 3 || (textWithMention.match(/\@/g) || []).length > 1 ) { closeList(); return; }
     setText(textWithMention.slice(1));
     setMentionReplaceStartIndex(event.target.selectionStart - text.length);
     openList();
@@ -82,6 +88,7 @@ function TypeAhead<O extends Option>({
     if (onSearch === undefined || isStringEmpty(text)) return;
     setIsLoading();
 
+    // Additional Feature 1. Prevent duplicate requests by caching responses from the twitter screen name lookup API
     // Keep track of the last request.
     // This is so we make sure we only accept the list of options from the _last_ request:
     // It is possible for a user to input `a`, then `ab`, then `a` again,
@@ -91,6 +98,7 @@ function TypeAhead<O extends Option>({
     promiseRef.current = promise;
     try {
       const options = await promise;
+      // Additional Feature 2. Debounce the input so that unnecessary requests aren’t being made as the user types a mention
       // It is possible for a user to type faster than promises can get resolved,
       // so we need to make sure we set the correct matching suggestions.
       // e.g. don't show suggestions for `Pari` when the input has `Paris`.
@@ -104,6 +112,7 @@ function TypeAhead<O extends Option>({
     setIsNotLoading();
   }
 
+  // Additional Feature 3. Keyboard navigation
   function onInputKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     switch (event.key) {
       case 'Enter':
@@ -143,7 +152,7 @@ function TypeAhead<O extends Option>({
   function openList() { setOpen(); }
 
   function closeList() { setClose(); }
-  
+
   function selectOption(option: O) {
     if (isOptionSelected(option.id, value)) {
       onChange(value.filter(v => v.id !== option.id));
@@ -171,6 +180,7 @@ function TypeAhead<O extends Option>({
   }
 
   return (
+    // Additional Feature 5. Improve accessibility of the app with WAI-ARIA attributes
     <FormLabel role="search" aria-label="search screen name" label={label} disabled={props.disabled} required={props.required} error={error} className={labelContainerClass}>
       <InputList
         isOpen={isOpen}
@@ -194,6 +204,7 @@ function TypeAhead<O extends Option>({
             {...props}
           />
           <hr className="textarea-divider" />
+          {/* Additional Feature 4. Add a characters remaining counter */}
           <footer className={className}><span className="chars-left-icon">{maxOfChars-inputValue.length}</span></footer>
         </div>
       </InputList>

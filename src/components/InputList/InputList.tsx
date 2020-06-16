@@ -56,6 +56,7 @@ export function InputList<O extends Option>({
 
   function mapOption(option: O, index: number) {
     return (
+    // Additional Feature 5. Improve accessibility of the app with WAI-ARIA attributes
       <div
         key={option.id}
         role="option"
@@ -76,6 +77,7 @@ export function InputList<O extends Option>({
       {showList &&
         <>
           <div id="input_list" />
+          {/* Additional Feature 5. Improve accessibility of the app with WAI-ARIA attributes */}
           <div
             role="listbox"
             aria-labelledby="input_list"

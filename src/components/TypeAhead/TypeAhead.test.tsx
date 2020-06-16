@@ -1,3 +1,4 @@
+// Additional Feature 6. Add unit tests
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import TypeAhead from './TypeAhead';

@@ -1,3 +1,4 @@
+// Additional Feature 6. Add unit tests
 import { isStringEmpty } from './string';
 
 it('returns true for string of a single or multiple whitespaces', () => {

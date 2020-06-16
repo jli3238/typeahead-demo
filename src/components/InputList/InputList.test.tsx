@@ -1,3 +1,4 @@
+// Additional Feature 6. Add unit tests
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { InputList } from './InputList';
@@ -28,7 +29,7 @@ describe('InputList tests', () => {
     expect(divElement).toHaveClass('option-attr name');
   });
   
-  test('it calls onItemOver when mouseOver is triggered on div', () => {
+  test('it calls onItemOver with the parameter when mouseOver is triggered on div', () => {
     const { getByRole } = render(<InputList {...props}/>);
     const divElement = getByRole(/option/i);
     expect(divElement).toHaveClass('input-list-item');
@@ -39,7 +40,7 @@ describe('InputList tests', () => {
     expect(props.onItemOver).toHaveBeenCalledWith({ id: 1, name: 'name1' });
   });
 
-  test('it calls onItemClick when mouseClick is triggered on div', () => {
+  test('it calls onItemClick with the parameter when mouseClick is triggered on div', () => {
     const { getByRole } = render(<InputList {...props}/>);
     const divElement = getByRole(/option/i);
     expect(divElement).toHaveClass('input-list-item');
