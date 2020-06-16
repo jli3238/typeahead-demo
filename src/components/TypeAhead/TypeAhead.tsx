@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { FormLabel } from '../FormLabel';
-import { InputList, Option } from '../InputList';
+import { FormLabel } from '../Common/FormLabel';
+import { InputList, Option } from '../Common/InputList';
 import { isOptionSelected } from './utils';
 import { isStringEmpty, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
-import { TextAreaProps } from '../TextArea';
+import { TextAreaProps } from '../Common/TextArea';
 import { Omit } from '../../../types/General';
 
 type SharedTextAreaProps = Omit<TextAreaProps, 'value' | 'defaultValue' | 'onChange'>;
@@ -66,6 +66,7 @@ function TypeAhead<O extends Option>({
     if (newInputValue.length > maxOfChars) return;
     setInputValue(newInputValue);
     closeList();
+    // eslint-disable-next-line
   }, [value])
 
   async function onInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -79,7 +80,7 @@ function TypeAhead<O extends Option>({
     // 3. The string between the cusor and the last whitespace before the cursor doesn't contain more than 1 "@"; for instance:
     //    inserting '@ch' by typing '@ch' in between the existing mention "@chicagobulls" as "@chicagobu'@ch'lls" won't display 
     //    suggestions to avoid messing up with the existing mention
-    if (textWithMention.charAt(0) !== '@' || textWithMention.length < 3 || (textWithMention.match(/\@/g) || []).length > 1 ) { closeList(); return; }
+    if (textWithMention.charAt(0) !== '@' || textWithMention.length < 3 || (textWithMention.match(/@/g) || []).length > 1 ) { closeList(); return; }
     setText(textWithMention.slice(1));
     setMentionReplaceStartIndex(event.target.selectionStart - text.length);
     openList();

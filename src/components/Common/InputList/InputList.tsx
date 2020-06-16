@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import clsx from 'clsx';
 import { Option } from './types';
-import { preventDefault } from '../../utils';
+import { preventDefault } from '../../../utils';
 import './InputList.less';
 
 function defaultItemRenderer(option: Option) {
