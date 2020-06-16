@@ -6,7 +6,7 @@ import { isOptionSelected } from './utils';
 import { isStringEmpty, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
 import { TextAreaProps } from '../Common/TextArea';
-import { Omit } from '../../../types/General';
+import { Omit } from '../../types/General';
 
 type SharedTextAreaProps = Omit<TextAreaProps, 'value' | 'defaultValue' | 'onChange'>;
 
@@ -213,4 +213,4 @@ function TypeAhead<O extends Option>({
   );
 }
 
-export default TypeAhead as <O extends Option>(props: TypeAheadProps<O> & { ref?: React.Ref<HTMLInputElement> }) => JSX.Element;
+export default TypeAhead as <O extends Option>(props: TypeAheadProps<O> & { ref?: React.Ref<HTMLTextAreaElement> }) => JSX.Element;

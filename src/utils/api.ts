@@ -1,4 +1,4 @@
-import { AuthToken } from '../../types/AuthToken';
+import { AuthToken } from '../types/AuthToken';
 
 const storageKey = 'api_token_v1';
 enum ERROR_CODES {
