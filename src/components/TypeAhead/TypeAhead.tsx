@@ -141,7 +141,9 @@ function TypeAhead<O extends Option>({
   }
 
   function openList() { setOpen(); }
+
   function closeList() { setClose(); }
+  
   function selectOption(option: O) {
     if (isOptionSelected(option.id, value)) {
       onChange(value.filter(v => v.id !== option.id));

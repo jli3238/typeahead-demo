@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import TypeAhead from './TypeAhead';
 
 const props = {
@@ -9,27 +9,90 @@ const props = {
 };
 
 describe('TypeAhead tests', () => {
+  async function setup(){
+    await act(async () => {
+      props.onSearch.mockReset();
+      props.onChange.mockReset();
+    });
+    return render(<TypeAhead {...props}/>);
+  }
 
-  test('renders label and span', () => {
-    const { getByRole, getByText } = render(<TypeAhead {...props}/>);
+  test('renders label and span', async () => {
+    const { getByRole, getByText } = await setup();
     const labelElement = getByRole(/search/i);
     expect(labelElement).toHaveClass('form-label-container');
     expect(labelElement).toHaveAttribute('aria-label');
     const spanElement = getByText('500');
     expect(spanElement).toHaveClass('chars-left-icon');
   });
-  
-  test('it calls onChange when change is triggered on textarea', () => {
-    const { getByTestId } = render(<TypeAhead {...props} />);
+
+  test('it doesn\'t call onSearch when change with "" is triggered on textarea', async () => {
+    const { getByTestId } = await setup();
     const textAreaElement = getByTestId('textarea');
-    fireEvent.change(textAreaElement);
+    fireEvent.change(textAreaElement, { target: { value: '' } });
+    expect(props.onSearch).not.toHaveBeenCalled();
+  });
+  
+  test('it doesn\'t call onChange when change with "" is triggered on textarea ', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: '' } });
+    expect(props.onChange).not.toHaveBeenCalled();
+  });
+  
+  test('it doesn\'t call onSearch when change with "aaa" is triggered on textarea', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: 'aaa' } });
+    expect(props.onSearch).not.toHaveBeenCalled();
+  });
+      
+  test('it doesn\'t call onChange when change with "aaa" is triggered on textarea ', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: 'aaa' } });
+    expect(props.onChange).not.toHaveBeenCalled();
+  });    
+
+  test('it doesn\'t call onSearch when change with "aaa" is triggered on textarea', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: '@' } });
+    expect(props.onSearch).not.toHaveBeenCalled();
+  });
+    
+  test('it doesn\'t call onChange when change with "aaa" is triggered on textarea ', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: '@' } });
     expect(props.onChange).not.toHaveBeenCalled();
   });
 
-  test('it calls onSearch when change is triggered on textarea', () => {
-    const { getByTestId } = render(<TypeAhead {...props} />);
+  test('it doesn\'t call onSearch when change with "aaa" is triggered on textarea', async () => {
+    const { getByTestId } = await setup();
     const textAreaElement = getByTestId('textarea');
-    fireEvent.change(textAreaElement);
+    fireEvent.change(textAreaElement, { target: { value: '@w' } });
     expect(props.onSearch).not.toHaveBeenCalled();
+  });
+    
+  test('it doesn\'t call onChange when change with "aaa" is triggered on textarea ', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: '@w' } });
+    expect(props.onChange).not.toHaveBeenCalled();
+  });
+
+  test('it doesn\'t call onSearch when change with "aaa" is triggered on textarea', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: '@er' } });
+    expect(props.onSearch).not.toHaveBeenCalled();
+  });
+    
+  test('it doesn\'t call onChange when change with "aaa" is triggered on textarea ', async () => {
+    const { getByTestId } = await setup();
+    const textAreaElement = getByTestId('textarea');
+    fireEvent.change(textAreaElement, { target: { value: '@er' } });
+    expect(props.onChange).not.toHaveBeenCalled();
   });
 });

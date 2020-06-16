@@ -34,8 +34,9 @@ describe('InputList tests', () => {
     expect(divElement).toHaveClass('input-list-item');
     expect(divElement).toHaveClass('input-list-item-highlight');
     expect(divElement).toHaveAttribute('aria-selected');
-    fireEvent.mouseOver(divElement);
+    fireEvent.mouseOver(divElement, { target: { id: 1, name: 'name1' } });
     expect(props.onItemOver).toHaveBeenCalled();
+    expect(props.onItemOver).toHaveBeenCalledWith({ id: 1, name: 'name1' });
   });
 
   test('it calls onItemClick when mouseClick is triggered on div', () => {
@@ -44,7 +45,9 @@ describe('InputList tests', () => {
     expect(divElement).toHaveClass('input-list-item');
     expect(divElement).toHaveClass('input-list-item-highlight');
     expect(divElement).toHaveAttribute('aria-selected');
-    fireEvent.click(divElement);
+    fireEvent.click(divElement, { target: { id: 1, name: 'name1' } });
     expect(props.onItemClick).toHaveBeenCalled();
+    expect(props.onItemClick).toHaveBeenCalledWith({ id: 1, name: 'name1' });
+
   });
 });
