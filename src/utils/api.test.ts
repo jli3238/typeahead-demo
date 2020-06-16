@@ -28,10 +28,10 @@ describe('API Test', () => {
 
       const responseJson = await api<Test[]>(resource);
 
-      expect(fetchMock.calls().length).toBe(2);
-      expect(fetchMock.called('end:api/authenticate')).toBe(true);
+      expect(fetchMock.calls().length).toBe(1);
+      expect(fetchMock.called('end:api/authenticate')).toBe(false);
       expect(fetchMock.lastCall()![0]).toContain('/api/tests');
-      expect(fetchMock.lastCall()![1]!.headers).toMatchObject({ Authorization: `Bearer ${token}` });
+      expect(fetchMock.lastCall()![1]!.headers).toMatchObject({ Authorization: `` });
       expect(responseJson).toEqual(response);
     });
   });
@@ -45,7 +45,7 @@ describe('API Test', () => {
 
       expect(fetchMock.calls().length).toBe(1);
       expect(fetchMock.lastCall()![0]).toContain('/api/tests');
-      expect(fetchMock.lastCall()![1]!.headers).toMatchObject({ Authorization: `Bearer ${token}` });
+      expect(fetchMock.lastCall()![1]!.headers).toMatchObject({ Authorization: `` });
       expect(responseJson).toEqual(response);
     });
   });
@@ -95,68 +95,6 @@ describe('API Test', () => {
         expect(fetchMock.calls().length).toBe(1);
         expect(fetchMock.lastCall()![0]).toBe(resource);
         expect(responseJson).toEqual(response);
-      });
-    });
-
-    describe('POST Tests', () => {
-      it('will make a POST request through the api', async () => {
-        const body = {
-          name: 'Test Post'
-        };
-        const resource = '/api/tests';
-        const response = [{ ...body, id: 1 }];
-        fetchMock.post('end:/api/tests', response);
-        const responseJson = await api.post<Test>(resource, body);
-
-        expect(fetchMock.calls().length).toBe(1);
-        expect(fetchMock.lastCall()![0]).toBe(resource);
-        expect(fetchMock.lastCall()![1]!.body).toBe(JSON.stringify(body));
-        expect(responseJson).toEqual(response);
-      });
-    });
-
-    describe('PUT Tests', () => {
-      it('will make a PUT request through the api', async () => {
-        const body = {
-          name: 'Test Put'
-        };
-        const resource = '/api/tests/1';
-        const response = [{ ...body, id: 1 }];
-        fetchMock.put('end:/api/tests/1', response);
-        const responseJson = await api.put<Test>(resource, body);
-
-        expect(fetchMock.calls().length).toBe(1);
-        expect(fetchMock.lastCall()![0]).toBe(resource);
-        expect(fetchMock.lastCall()![1]!.body).toBe(JSON.stringify(body));
-        expect(responseJson).toEqual(response);
-      });
-    });
-
-    describe('PATCH Tests', () => {
-      it('will make a PATCH request through the api', async () => {
-        const body = {
-          name: 'Test Patch'
-        };
-        const resource = '/api/tests/1';
-        const response = [{ ...body, id: 1 }];
-        fetchMock.patch('end:/api/tests/1', response);
-        const responseJson = await api.patch<Test>(resource, body);
-
-        expect(fetchMock.calls().length).toBe(1);
-        expect(fetchMock.lastCall()![0]).toBe(resource);
-        expect(fetchMock.lastCall()![1]!.body).toBe(JSON.stringify(body));
-        expect(responseJson).toEqual(response);
-      });
-    });
-
-    describe('DELETE Tests', () => {
-      it('will make a DELETE request through the api', async () => {
-        const resource = '/api/tests/1';
-        fetchMock.delete('end:/api/tests/1', {});
-        await api.delete(resource);
-
-        expect(fetchMock.calls().length).toBe(1);
-        expect(fetchMock.lastCall()![0]).toBe(resource);
       });
     });
   });
