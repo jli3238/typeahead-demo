@@ -7,7 +7,6 @@ import { isStringEmpty, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
 import { TextAreaProps } from '../TextArea';
 import { Omit } from '../../../types/General';
-import '../TextArea/TextArea.less';
 
 type SharedTextAreaProps = Omit<TextAreaProps, 'value' | 'defaultValue' | 'onChange'>;
 
@@ -189,6 +188,7 @@ function TypeAhead<O extends Option>({
             onFocus={wrapEvent(closeList, onFocus)}
             onBlur={wrapEvent(closeList, onBlur)}
             placeholder={placeholder}
+            data-testid="textarea"
             {...props}
           />
           <hr className="textarea-divider" />

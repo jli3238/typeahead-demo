@@ -7,9 +7,9 @@ import './InputList.less';
 function defaultItemRenderer(option: Option) {
   return (
     <div className="option-row">
-      <div className="option-attr"><img src={option.profile_image_url} alt={option.screen_name} /><span className="screen-name">@{option.screen_name}</span></div>
+      <div className="option-attr"><img data-testid="option-img" src={option.profile_image_url} alt={option.screen_name} /><span className="screen-name">@{option.screen_name}</span></div>
       <div className="option-attr name">{option.name}</div>
-      <div className="option-attr verified">{option.verified && 'VERIFIED'}</div>
+      <div className="option-attr verified" data-testid="option-verified">{option.verified && 'VERIFIED'}</div>
     </div>
   );
 }

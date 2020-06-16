@@ -1,4 +1,3 @@
-import { useEffect, useState, useReducer } from 'react';
 import { AuthToken } from '../../types/AuthToken';
 
 const storageKey = 'api_token_v1';
