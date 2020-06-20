@@ -4,8 +4,9 @@ import { InputList, Option } from '../Common/InputList';
 import { isOptionSelected } from './utils';
 import { isStringEmpty, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';
-import { TextAreaProps } from '../Common/TextArea';
 import { Omit } from '../../types/General';
+
+interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> { }
 
 type SharedTextAreaProps = Omit<TextAreaProps, 'value' | 'defaultValue' | 'onChange'>;
 
@@ -177,7 +178,6 @@ function TypeAhead<O extends Option>({
   }
 
   return (
-    // Additional Feature 5. Improve accessibility of the app with WAI-ARIA attributes
     <>
       <InputList
         isOpen={isOpen}
