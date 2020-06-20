@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { FormLabel } from '../Common/FormLabel';
 import { InputList, Option } from '../Common/InputList';
 import { isOptionSelected } from './utils';
 import { isStringEmpty, wrapEvent } from '../../utils';
@@ -34,9 +33,6 @@ export type TypeAheadProps<O extends Option = Option> = DynamicProps<O>;
  */
 function TypeAhead<O extends Option>({
   className,
-  error,
-  label,
-  labelContainerClass,
   noResultsText,
   placeholder,
   value,
@@ -182,7 +178,7 @@ function TypeAhead<O extends Option>({
 
   return (
     // Additional Feature 5. Improve accessibility of the app with WAI-ARIA attributes
-    <FormLabel role="search" aria-label="search screen name" label={label} disabled={props.disabled} required={props.required} error={error} className={labelContainerClass}>
+    <>
       <InputList
         isOpen={isOpen}
         highlightedOptionID={highlightedOptionID}
@@ -209,7 +205,7 @@ function TypeAhead<O extends Option>({
           <footer className={className}><span className="chars-left-icon">{maxOfChars-inputValue.length}</span></footer>
         </div>
       </InputList>
-    </FormLabel>
+    </>
   );
 }
 

@@ -22,7 +22,6 @@ function App() {
           value={value}
           onChange={setValue}
           onSearch={onSearchAsync}
-          label="Twitter"
           placeholder={placeholder}
         />
       </main>
