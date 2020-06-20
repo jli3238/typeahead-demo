@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { InputList, Option } from '../Common/InputList';
+import { InputList, Option } from '../InputList';
 import { isOptionSelected } from './utils';
 import { isStringEmpty, wrapEvent } from '../../utils';
 import { useBooleanState } from '../../customHooks';

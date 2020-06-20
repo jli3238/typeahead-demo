@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Option, UserResponse } from './components/Common/InputList';
+import { Option, UserResponse } from './components/InputList';
 import { TypeAhead } from '../src/components/TypeAhead';
 import { api } from './utils/api';
 
