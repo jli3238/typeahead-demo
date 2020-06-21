@@ -79,11 +79,11 @@ function TypeAhead<O extends Option>({
     //    suggestions to avoid messing up with the existing mention
     if (textWithMention.charAt(0) !== '@' || textWithMention.length < 3 || (textWithMention.match(/@/g) || []).length > 1 ) { closeList(); return; }
     setText(textWithMention.slice(1));
-    setMentionReplaceStartIndex(event.target.selectionStart - text.length);
+    setMentionReplaceStartIndex(event.target.selectionStart - textWithMention.slice(1).length);
     openList();
     hideError();
     setOptions([]);
-    if (onSearch === undefined || isStringEmpty(text)) return;
+    if (onSearch === undefined || isStringEmpty(textWithMention.slice(1))) return;
     setIsLoading();
 
     // Additional Feature 1. Prevent duplicate requests by caching responses from the twitter screen name lookup API
@@ -92,7 +92,7 @@ function TypeAhead<O extends Option>({
     // It is possible for a user to input `a`, then `ab`, then `a` again,
     // in which case we will ignore the first request for `a`, as it might resolve
     // to an outdated list of options depending on contextual values.
-    const promise = onSearch(text);
+    const promise = onSearch(textWithMention.slice(1));
     promiseRef.current = promise;
     try {
       const options = await promise;
