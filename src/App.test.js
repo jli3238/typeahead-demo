@@ -11,7 +11,7 @@ const state = {
   setValue: jest.fn(),
 }
 
-describe('DisplaySearchForm tests', () => {
+describe('Typeahead tests', () => {
   async function setup(){
     await act(async () => {
       state.onSearchAsync.mockReset();
